@@ -5,18 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.Navigation;
-
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 import bike.hackboy.bronco.hal.BikeService;
 
@@ -31,16 +29,16 @@ public class MainActivity extends AppCompatActivity {
             switch (event) {
                 case "disconnected":
                     Navigation
-                        .findNavController(MainActivity.this, R.id.nav_host_fragment)
-                        .navigate(R.id.CbyDiscovery);
-                break;
+                            .findNavController(MainActivity.this, R.id.nav_host_fragment)
+                            .navigate(R.id.CbyDiscovery);
+                    break;
                 case "toast":
                     Toast.makeText(
-                        MainActivity.this.getApplicationContext(),
-                        intent.getStringExtra("message"),
-                        Toast.LENGTH_SHORT
+                            MainActivity.this.getApplicationContext(),
+                            intent.getStringExtra("message"),
+                            Toast.LENGTH_SHORT
                     ).show();
-                break;
+                    break;
             }
         }
     };
@@ -59,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(
-            new Intent(BuildConfig.APPLICATION_ID).putExtra("event", "clear-status")
+                new Intent(BuildConfig.APPLICATION_ID).putExtra("event", "clear-status")
         );
 
         super.onDestroy();
@@ -70,19 +68,19 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
 
         LocalBroadcastManager.getInstance(getApplicationContext())
-            .unregisterReceiver(messageReceiver);
+                .unregisterReceiver(messageReceiver);
     }
 
     @Override
     protected void onResume() {
-       super.onResume();
+        super.onResume();
 
-       LocalBroadcastManager bm =  LocalBroadcastManager.getInstance(getApplicationContext());
-       bm.registerReceiver(messageReceiver, new IntentFilter(BuildConfig.APPLICATION_ID));
+        LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getApplicationContext());
+        bm.registerReceiver(messageReceiver, new IntentFilter(BuildConfig.APPLICATION_ID));
 
-       bm.sendBroadcast(
-            new Intent(BuildConfig.APPLICATION_ID).putExtra("event", "check-connected")
-       );
+        bm.sendBroadcast(
+                new Intent(BuildConfig.APPLICATION_ID).putExtra("event", "check-connected")
+        );
     }
 
     @Override
@@ -96,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (ACTION_RESET_SPEED.equals(getIntent().getAction())) {
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(
-                new Intent(BuildConfig.APPLICATION_ID).putExtra("event", "reset-speed")
+                    new Intent(BuildConfig.APPLICATION_ID).putExtra("event", "reset-speed")
             );
 
             this.finishAffinity();
@@ -122,34 +120,34 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.about) {
             new AlertDialog.Builder(this, R.style.Theme_Bronco_AlertDialog)
-                .setTitle(R.string.about_title)
-                .setMessage(R.string.credits)
-                .setNegativeButton(R.string.got_it, null)
-                .setPositiveButton(R.string.visit_sub, (dialog, whichButton) -> {
-                    dialog.dismiss();
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.reddit.com/r/cowboybikes/"));
-                    startActivity(browserIntent);
-                })
-                .show();
-        } else if(id == R.id.disconnect) {
+                    .setTitle(R.string.about_title)
+                    .setMessage(R.string.credits)
+                    .setNegativeButton(R.string.got_it, null)
+                    .setPositiveButton(R.string.visit_sub, (dialog, whichButton) -> {
+                        dialog.dismiss();
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.reddit.com/r/cowboybikes/"));
+                        startActivity(browserIntent);
+                    })
+                    .show();
+        } else if (id == R.id.disconnect) {
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(
-                new Intent(BuildConfig.APPLICATION_ID).putExtra("event", "disconnect")
+                    new Intent(BuildConfig.APPLICATION_ID).putExtra("event", "disconnect")
             );
-        } else if(id == R.id.stop_and_quit) {
+        } else if (id == R.id.stop_and_quit) {
             stopService(new Intent(this, BikeService.class));
             this.finishAffinity();
-        } else if(id == R.id.debug_write_flash) {
+        } else if (id == R.id.debug_write_flash) {
             LocalBroadcastManager.getInstance(getApplicationContext())
-                .sendBroadcast(new Intent(BuildConfig.APPLICATION_ID)
-                    .putExtra("event", "write-flash"));
-        } else if(id == R.id.debug_close_flash) {
+                    .sendBroadcast(new Intent(BuildConfig.APPLICATION_ID)
+                            .putExtra("event", "write-flash"));
+        } else if (id == R.id.debug_close_flash) {
             LocalBroadcastManager.getInstance(getApplicationContext())
-                .sendBroadcast(new Intent(BuildConfig.APPLICATION_ID)
-                    .putExtra("event", "close-flash"));
-        } else if(id == R.id.debug_read_motor_state) {
+                    .sendBroadcast(new Intent(BuildConfig.APPLICATION_ID)
+                            .putExtra("event", "close-flash"));
+        } else if (id == R.id.debug_read_motor_state) {
             LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getApplicationContext());
             lbm.sendBroadcast(new Intent(BuildConfig.APPLICATION_ID).putExtra("event", "read-motor-mode"));
-        } else if(id == R.id.debug_read_speed) {
+        } else if (id == R.id.debug_read_speed) {
             LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getApplicationContext());
             lbm.sendBroadcast(new Intent(BuildConfig.APPLICATION_ID).putExtra("event", "read-speed"));
         }

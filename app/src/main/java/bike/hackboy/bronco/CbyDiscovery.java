@@ -17,58 +17,58 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.fragment.NavHostFragment;
 
 public class CbyDiscovery extends Fragment {
-	private final BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String event = intent.getStringExtra("event");
-			//Log.d("event", event);
+    private final BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String event = intent.getStringExtra("event");
+            //Log.d("event", event);
 
-			if ("on-discovered".equals(event)) {
-				NavHostFragment.findNavController(CbyDiscovery.this)
-					.navigate(R.id.action_CbyDiscovery_to_Dashboard);
-			}
-		}
-	};
+            if ("on-discovered".equals(event)) {
+                NavHostFragment.findNavController(CbyDiscovery.this)
+                        .navigate(R.id.action_CbyDiscovery_to_Dashboard);
+            }
+        }
+    };
 
-	@Override
-	public void onResume() {
-		super.onResume();
+    @Override
+    public void onResume() {
+        super.onResume();
 
-		LocalBroadcastManager.getInstance(requireContext())
-			.registerReceiver(messageReceiver, new IntentFilter(BuildConfig.APPLICATION_ID));
-	}
+        LocalBroadcastManager.getInstance(requireContext())
+                .registerReceiver(messageReceiver, new IntentFilter(BuildConfig.APPLICATION_ID));
+    }
 
-	@Override
-	public void onPause() {
-		super.onPause();
+    @Override
+    public void onPause() {
+        super.onPause();
 
-		LocalBroadcastManager.getInstance(requireContext())
-			.unregisterReceiver(messageReceiver);
-	}
+        LocalBroadcastManager.getInstance(requireContext())
+                .unregisterReceiver(messageReceiver);
+    }
 
-	@Override
-	public View onCreateView(
-		LayoutInflater inflater, ViewGroup container,
-		Bundle savedInstanceState
-	) {
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.discovery, container, false);
-	}
+    @Override
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState
+    ) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.discovery, container, false);
+    }
 
-	public void lookForCboy() {
-		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-			Toast.makeText(this.getContext(), R.string.bluetooth_off, Toast.LENGTH_LONG).show();
-		}
+    public void lookForCboy() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+            Toast.makeText(this.getContext(), R.string.bluetooth_off, Toast.LENGTH_LONG).show();
+        }
 
-		Intent intent = new Intent(BuildConfig.APPLICATION_ID);
-		intent.putExtra("event", "connect");
-		LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent);
-	}
+        Intent intent = new Intent(BuildConfig.APPLICATION_ID);
+        intent.putExtra("event", "connect");
+        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent);
+    }
 
-	public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-		view.findViewById(R.id.button_connect).setOnClickListener(view1 -> lookForCboy());
-	}
+        view.findViewById(R.id.button_connect).setOnClickListener(view1 -> lookForCboy());
+    }
 }
