@@ -17,6 +17,15 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file("../keystore/bronco-keystore.jks")
+            storePassword "bronco"
+            keyAlias "bronco"
+            keyPassword "bronco"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
